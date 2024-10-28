@@ -31,6 +31,11 @@ const App = () => {
 			}
 		});
 
+		// 监听 webdav 的配置变化
+		watchKey(webdavStore, "enable", initWebdavClient);
+		watchKey(webdavStore, "url", initWebdavClient);
+		watchKey(webdavStore, "options", initWebdavClient);
+
 		// 监听显示窗口的事件
 		listen(LISTEN_KEY.SHOW_WINDOW, ({ payload }) => {
 			const appWindow = getCurrentWebviewWindow();

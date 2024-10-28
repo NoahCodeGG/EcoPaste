@@ -1,4 +1,5 @@
 import type { OsType } from "@tauri-apps/plugin-os";
+import type { WebDAVClient, WebDAVClientOptions } from "webdav";
 
 export type Theme = "auto" | "light" | "dark";
 
@@ -7,6 +8,7 @@ export type Language = (typeof LANGUAGE)[keyof typeof LANGUAGE];
 export interface Store {
 	globalStore: GlobalStore;
 	clipboardStore: ClipboardStore;
+	webdavStore: WebdavStore;
 }
 
 export interface GlobalStore {
@@ -85,4 +87,16 @@ export interface ClipboardStore {
 		duration: number;
 		unit: number;
 	};
+}
+
+export interface WebdavStore {
+	client?: WebDAVClient;
+	enable: boolean;
+	url: string;
+	options: WebDAVClientOptions;
+	directory: string;
+	autoUpload: boolean;
+	autoUploadInterval: number;
+	uploading: boolean;
+	uploadingProgress: number;
 }

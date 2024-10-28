@@ -30,6 +30,7 @@
 		"@tauri-apps/plugin-dialog": "^2.0.1",
 		"@tauri-apps/plugin-fs": "^2.0.1",
 		"@tauri-apps/plugin-global-shortcut": "^2.0.0",
+		"@tauri-apps/plugin-http": "^2.0.1",
 		"@tauri-apps/plugin-log": "^2.0.0",
 		"@tauri-apps/plugin-os": "^2.0.0",
 		"@tauri-apps/plugin-process": "^2.0.0",
@@ -54,7 +55,8 @@
 		"rehype-raw": "^7.0.0",
 		"rtf.js": "^3.0.9",
 		"valtio": "1.7.0",
-		"valtio-persist": "^1.0.2"
+		"valtio-persist": "^1.0.2",
+		"webdav": "^5.7.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.3",

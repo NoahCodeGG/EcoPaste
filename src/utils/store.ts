@@ -21,7 +21,7 @@ const initStore = async () => {
  * @param backup 是否为备份数据
  */
 export const saveStore = async (backup = false) => {
-	const store = { globalStore, clipboardStore };
+	const store = { globalStore, clipboardStore, webdavStore };
 
 	const path = await getSaveStorePath(backup);
 
@@ -44,9 +44,13 @@ export const restoreStore = async (backup = false) => {
 
 		merge(globalStore, nextGlobalStore);
 		merge(clipboardStore, store.clipboardStore);
+		merge(webdavStore, store.webdavStore);
 	}
 
 	if (backup) return;
 
 	initStore();
+	initWebdavClient();
+	const saveDataDir = getSaveDataDir();
+	uploadDirectoryByWebdav(saveDataDir, webdavStore.directory);
 };

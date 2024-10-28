@@ -22,6 +22,8 @@
 				}
 			]
 		},
+		"fs:read-files",
+		"fs:allow-app-meta-recursive",
 		"fs:allow-read-text-file",
 		"fs:allow-write-text-file",
 		"fs:allow-copy-file",
@@ -55,6 +57,10 @@
 		"eco-clipboard:default",
 		"eco-ocr:default",
 		"eco-paste:default",
-		"eco-autostart:default"
+		"eco-autostart:default",
+		{
+			"identifier": "http:default",
+			"allow": [{ "url": "https://dav.jianguoyun.com/dav/" }]
+		}
 	]
 }
