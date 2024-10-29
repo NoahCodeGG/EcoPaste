@@ -7,6 +7,7 @@ export type Language = (typeof LANGUAGE)[keyof typeof LANGUAGE];
 export interface Store {
 	globalStore: GlobalStore;
 	clipboardStore: ClipboardStore;
+	synchronizationStore: SynchronizationStore;
 }
 
 export interface GlobalStore {
@@ -85,4 +86,17 @@ export interface ClipboardStore {
 		duration: number;
 		unit: number;
 	};
+}
+
+export interface SynchronizationStore {
+	server: {
+		type: (typeof SYNCHRONIZATION_SERVER_TYPE)[keyof typeof SYNCHRONIZATION_SERVER_TYPE];
+		options: SynchronizationServerWebdavOptions;
+	};
+}
+
+export interface SynchronizationServerWebdavOptions {
+	url: string;
+	username: string;
+	password: string;
 }

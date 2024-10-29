@@ -32,6 +32,7 @@ tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-updater = "2"
 tauri-plugin-process = "2"
+tauri-plugin-http = "2"
 tauri-plugin-eco-window.workspace = true
 tauri-plugin-eco-macos-permissions.workspace = true
 tauri-plugin-eco-mouse.workspace = true
@@ -43,6 +44,7 @@ tauri-plugin-eco-ocr.workspace = true
 tauri-plugin-eco-paste.workspace = true
 tauri-plugin-eco-window-state.workspace = true
 tauri-plugin-eco-autostart.workspace = true
+tauri-plugin-eco-synchronization.workspace = true
 
 [target."cfg(target_os = \"macos\")".dependencies]
 tauri-nspanel.workspace = true

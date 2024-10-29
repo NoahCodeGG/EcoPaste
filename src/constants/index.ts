@@ -99,3 +99,11 @@ export const MACOS_PERMISSIONS_PLUGIN = {
 export const AUTOSTART_PLUGIN = {
 	IS_AUTOSTART: "plugin:eco-autostart|is_autostart",
 };
+
+export const SYNCHRONIZATION_PLUGIN = {
+	WEBDAV: "plugin:eco-synchronization|webdav",
+};
+
+export const SYNCHRONIZATION_SERVER_TYPE = {
+	WEBDAV: "webdav",
+};

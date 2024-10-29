@@ -6,7 +6,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 /**
  * 备份数据的扩展名
  */
-const extname = () => {
+export const extname = () => {
 	const { appName } = globalStore.env;
 
 	return `${appName}-backup`;
@@ -15,14 +15,21 @@ const extname = () => {
 /**
  * 导出数据
  */
-export const exportData = async () => {
+export const exportData = async (
+	synchronization?: boolean,
+	filename?: string,
+	directory?: string,
+) => {
 	await saveStore(true);
 
-	const filename = formatDate(dayjs(), "YYYY_MM_DD_HH_mm_ss");
+	const finalFilename = filename || formatDate(dayjs(), "YYYY_MM_DD_HH_mm_ss");
+	const finalDirectory = directory || (await downloadDir());
+	const finalSynchronization = synchronization || false;
 
-	const dstPath = joinPath(await downloadDir(), `${filename}.${extname()}`);
+	const dstPath = joinPath(finalDirectory, `${finalFilename}.${extname()}`);
 
 	return invoke(BACKUP_PLUGIN.EXPORT_DATA, {
+		synchronization: finalSynchronization,
 		dstPath,
 		srcDir: getSaveDataDir(),
 	});
@@ -31,12 +38,14 @@ export const exportData = async () => {
 /**
  * 导入数据
  */
-export const importData = async () => {
-	const srcPath = await open({
-		filters: [{ name: "", extensions: [extname()] }],
-	});
+export const importData = async (srcPath?: string) => {
+	const finalSrcPath =
+		srcPath ||
+		(await open({
+			filters: [{ name: "", extensions: [extname()] }],
+		}));
 
-	if (!srcPath) return;
+	if (!finalSrcPath) return;
 
 	await emit(LISTEN_KEY.CLOSE_DATABASE);
 

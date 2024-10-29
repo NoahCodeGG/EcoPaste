@@ -16,9 +16,10 @@ use tauri_plugin_eco_fs_extra::{metadata, open_path};
 #[command]
 pub async fn export_data<R: Runtime>(
     app_handle: AppHandle<R>,
+    synchronization: bool,
     src_dir: String,
     dst_path: String,
-) -> Result<(), String> {
+) -> Result<String, String> {
     let dst_file = File::create(dst_path.clone()).map_err(|err| err.to_string())?;
     let enc = GzEncoder::new(dst_file, Compression::default());
     let mut tar = tar::Builder::new(enc);
@@ -28,11 +29,20 @@ pub async fn export_data<R: Runtime>(
         let metadata = metadata(path.clone()).await?;
 
         if metadata.is_file {
-            if metadata.extname == "db" || metadata.name.starts_with(".store-backup.") {
-                let file = &mut File::open(path.clone()).map_err(|err| err.to_string())?;
+            if synchronization {
+                if metadata.extname == "db" || metadata.extname == "db-wal" || metadata.extname == "db-shm" {
+                    let file = &mut File::open(path.clone()).map_err(|err| err.to_string())?;
 
-                tar.append_file(metadata.name.clone(), file)
-                    .map_err(|err| err.to_string())?;
+                    tar.append_file(metadata.name.clone(), file)
+                        .map_err(|err| err.to_string())?;
+                }
+            } else {
+                if metadata.extname == "db" || metadata.name.starts_with(".store-backup.") {
+                    let file = &mut File::open(path.clone()).map_err(|err| err.to_string())?;
+    
+                    tar.append_file(metadata.name.clone(), file)
+                        .map_err(|err| err.to_string())?;
+                }
             }
         }
 
@@ -44,11 +54,11 @@ pub async fn export_data<R: Runtime>(
 
     tar.finish().map_err(|err| err.to_string())?;
 
-    open_path(app_handle, dst_path, true)
+    open_path(app_handle, dst_path.clone(), true)
         .await
         .map_err(|err| err.to_string())?;
 
-    Ok(())
+    Ok(dst_path)
 }
 
 // 导入数据

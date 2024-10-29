@@ -77,6 +77,7 @@ pub fn run() {
         .plugin(tauri_plugin_eco_window_state::init())
         // 自定义判断是否自动启动的插件
         .plugin(tauri_plugin_eco_autostart::init())
+        .plugin(tauri_plugin_eco_synchronization::init())
         .on_window_event(|window, event| match event {
             // 让 app 保持在后台运行：https://tauri.app/v1/guides/features/system-tray/#preventing-the-app-from-closing
             WindowEvent::CloseRequested { api, .. } => {

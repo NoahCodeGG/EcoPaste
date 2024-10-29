@@ -15,6 +15,8 @@ const App = () => {
 
 	useMount(async () => {
 		await restoreStore();
+		// TODO 测试代码
+		webdav("download");
 
 		// 生成 antd 的颜色变量
 		generateColorVars();

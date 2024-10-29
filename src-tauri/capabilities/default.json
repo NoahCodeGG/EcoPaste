@@ -55,6 +55,11 @@
 		"eco-clipboard:default",
 		"eco-ocr:default",
 		"eco-paste:default",
-		"eco-autostart:default"
+		"eco-autostart:default",
+		"eco-synchronization:default",
+		{
+			"identifier": "http:default",
+			"allow": [{ "url": "http://**" }, { "url": "https://**" }]
+		}
 	]
 }

@@ -1,0 +1,19 @@
+[package]
+name = "tauri-plugin-eco-synchronization"
+version = "0.1.0"
+authors = []
+description = ""
+edition = "2021"
+rust-version = "1.77.2"
+links = "tauri-plugin-eco-synchronization"
+
+[dependencies]
+tauri.workspace = true
+serde.workspace = true
+reqwest_dav = "0.1.14"
+thiserror = "1.0.65"
+tauri-plugin-log = "2.0.0"
+log = "0.4.22"
+
+[build-dependencies]
+tauri-plugin.workspace = true

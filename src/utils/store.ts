@@ -1,3 +1,4 @@
+import { synchronizationStore } from "@/stores/synchronization";
 import type { Store } from "@/types/store";
 import { getName, getVersion } from "@tauri-apps/api/app";
 import { appDataDir } from "@tauri-apps/api/path";
@@ -21,7 +22,7 @@ const initStore = async () => {
  * @param backup 是否为备份数据
  */
 export const saveStore = async (backup = false) => {
-	const store = { globalStore, clipboardStore };
+	const store = { globalStore, clipboardStore, synchronizationStore };
 
 	const path = await getSaveStorePath(backup);
 
@@ -44,6 +45,7 @@ export const restoreStore = async (backup = false) => {
 
 		merge(globalStore, nextGlobalStore);
 		merge(clipboardStore, store.clipboardStore);
+		merge(synchronizationStore, store.synchronizationStore);
 	}
 
 	if (backup) return;
