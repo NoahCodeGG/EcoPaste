@@ -1,6 +1,6 @@
 [package]
 name = "eco-paste"
-version = "0.3.0-beta.2"
+version = "0.4.0"
 description = "一款开源的跨平台剪贴板管理工具"
 authors = []
 edition = "2021"
@@ -32,17 +32,16 @@ tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-updater = "2"
 tauri-plugin-process = "2"
+tauri-plugin-drag = "2"
 tauri-plugin-http = "2"
 tauri-plugin-eco-window.workspace = true
 tauri-plugin-eco-macos-permissions.workspace = true
-tauri-plugin-eco-mouse.workspace = true
 tauri-plugin-eco-fs-extra.workspace = true
 tauri-plugin-eco-backup.workspace = true
 tauri-plugin-eco-locale.workspace = true
 tauri-plugin-eco-clipboard.workspace = true
 tauri-plugin-eco-ocr.workspace = true
 tauri-plugin-eco-paste.workspace = true
-tauri-plugin-eco-window-state.workspace = true
 tauri-plugin-eco-autostart.workspace = true
 tauri-plugin-eco-synchronization.workspace = true
 

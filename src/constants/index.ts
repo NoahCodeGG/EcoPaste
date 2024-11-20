@@ -30,7 +30,8 @@ export const LISTEN_KEY = {
 	CLIPBOARD_ITEM_SELECT_NEXT: "clipboard-item-select-next",
 	CLOSE_DATABASE: "close-database",
 	TOGGLE_LISTEN_CLIPBOARD: "toggle-listen-clipboard",
-	MACOS_PANEL_FOCUS: "macos-panel-focus",
+	CLIPBOARD_ITEM_FAVORITE: "clipboard-item-favorite",
+	ACTIVATE_BACK_TOP: "activate-back-top",
 };
 
 export const WINDOW_PLUGIN = {
@@ -63,10 +64,6 @@ export const CLIPBOARD_PLUGIN = {
 	WRITE_RTF: "plugin:eco-clipboard|write_rtf",
 	WRITE_TEXT: "plugin:eco-clipboard|write_text",
 	CLIPBOARD_UPDATE: "plugin:eco-clipboard://clipboard_update",
-};
-
-export const MOUSE_PLUGIN = {
-	GET_MOUSE_COORDS: "plugin:eco-mouse|get_mouse_coords",
 };
 
 export const OCR_PLUGIN = {

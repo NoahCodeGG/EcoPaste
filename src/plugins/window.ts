@@ -3,7 +3,11 @@ import type { WindowLabel } from "@/types/plugin";
 import { invoke } from "@tauri-apps/api/core";
 import { emit } from "@tauri-apps/api/event";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { PhysicalPosition, availableMonitors } from "@tauri-apps/api/window";
+import {
+	PhysicalPosition,
+	availableMonitors,
+	cursorPosition,
+} from "@tauri-apps/api/window";
 
 /**
  * 显示窗口
@@ -38,6 +42,11 @@ export const toggleWindowVisible = async () => {
 	if (appWindow.label === WINDOW_LABEL.MAIN) {
 		const { window } = clipboardStore;
 
+		// 激活时回到顶部
+		if (window.backTop) {
+			await emit(LISTEN_KEY.ACTIVATE_BACK_TOP);
+		}
+
 		if (window.style === "float") {
 			if (!focused && window.position !== "remember") {
 				const monitors = await availableMonitors();
@@ -46,38 +55,34 @@ export const toggleWindowVisible = async () => {
 
 				const { width, height } = await appWindow.innerSize();
 
-				const [x, y] = await getMouseCoords();
+				const cursor = await cursorPosition();
 
 				for await (const monitor of monitors) {
-					const {
-						scaleFactor,
-						position: { x: posX, y: posY },
-						size: { width: screenWidth, height: screenHeight },
-					} = monitor;
+					const { position, size } = monitor;
 
-					const factor = isMac() ? scaleFactor : 1;
-
-					let coordX = x * factor;
-					let coordY = y * factor;
+					let cursorX = cursor.x;
+					let cursorY = cursor.y;
 
 					if (
-						coordX < posX ||
-						coordY < posY ||
-						coordX > posX + screenWidth ||
-						coordY > posY + screenHeight
+						cursorX < position.x ||
+						cursorY < position.y ||
+						cursorX > position.x + size.width ||
+						cursorY > position.y + size.height
 					) {
 						continue;
 					}
 
 					if (window.position === "follow") {
-						coordX = Math.min(coordX, posX + screenWidth - width);
-						coordY = Math.min(coordY, posY + screenHeight - height);
+						cursorX = Math.min(cursorX, position.x + size.width - width);
+						cursorY = Math.min(cursorY, position.y + size.height - height);
 					} else {
-						coordX = posX + (screenWidth - width) / 2;
-						coordY = posY + (screenHeight - height) / 2;
+						cursorX = position.x + (size.width - width) / 2;
+						cursorY = position.y + (size.height - height) / 2;
 					}
 
-					await appWindow.setPosition(new PhysicalPosition(coordX, coordY));
+					await appWindow.setPosition(
+						new PhysicalPosition(Math.round(cursorX), Math.round(cursorY)),
+					);
 
 					break;
 				}

@@ -1,9 +1,8 @@
 import { SYNCHRONIZATION_SERVER_TYPE } from "@/constants";
 import type { SynchronizationStore } from "@/types/store";
-import proxyWithPersist from "valtio-persist";
+import { proxy } from "valtio";
 
-// TODO 删除测试配置
-export const SYNCHRONIZATION_STORE_INITIAL_STATE: SynchronizationStore = {
+export const synchronizationStore = proxy<SynchronizationStore>({
 	server: {
 		type: SYNCHRONIZATION_SERVER_TYPE.WEBDAV,
 		options: {
@@ -12,13 +11,4 @@ export const SYNCHRONIZATION_STORE_INITIAL_STATE: SynchronizationStore = {
 			password: "ah3q34yza3mm6pk9",
 		},
 	},
-};
-
-export const synchronizationStore = proxyWithPersist<SynchronizationStore>({
-	name: "synchronization",
-	initialState: { ...SYNCHRONIZATION_STORE_INITIAL_STATE },
-	persistStrategies,
-	version: 0,
-	migrations: {},
-	getStorage,
 });

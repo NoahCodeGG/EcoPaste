@@ -2,11 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { emit } from "@tauri-apps/api/event";
 
 export const webdav = async (operate: string) => {
-	const backupFilePath = await exportData(
-		true,
-		"synchronization",
-		getSaveDataDir(),
-	);
+	const backupFilePath = await exportData(getSaveDataDir());
 	const { url, username, password } = synchronizationStore.server.options;
 
 	const isSuccess = (await invoke(SYNCHRONIZATION_PLUGIN.WEBDAV, {

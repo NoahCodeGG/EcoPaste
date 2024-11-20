@@ -1,6 +1,7 @@
 import Scrollbar from "@/components/Scrollbar";
 import { ClipboardPanelContext } from "@/pages/Clipboard/Panel";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { listen } from "@tauri-apps/api/event";
 import { FloatButton } from "antd";
 import { findIndex } from "lodash-es";
 import Item from "./components/Item";
@@ -20,7 +21,7 @@ const List = () => {
 	});
 
 	useMount(() => {
-		state.scrollToIndex = rowVirtualizer.scrollToIndex;
+		listen(LISTEN_KEY.ACTIVATE_BACK_TOP, scrollToTop);
 	});
 
 	const isFocusWithin = useFocusWithin(document.body);
@@ -52,7 +53,17 @@ const List = () => {
 	}, [state.list.length]);
 
 	useOSKeyPress(
-		["space", "enter", "backspace", "uparrow", "downarrow", "home"],
+		[
+			"space",
+			"enter",
+			"backspace",
+			"delete",
+			"uparrow",
+			"downarrow",
+			"home",
+			"meta.d",
+			"ctrl.d",
+		],
 		(_, key) => {
 			state.eventBusId = state.activeId;
 
@@ -65,6 +76,7 @@ const List = () => {
 					return state.$eventBus?.emit(LISTEN_KEY.CLIPBOARD_ITEM_PASTE);
 				// 删除
 				case "backspace":
+				case "delete":
 					return state.$eventBus?.emit(LISTEN_KEY.CLIPBOARD_ITEM_DELETE);
 				// 选中上一个
 				case "uparrow":
@@ -75,6 +87,10 @@ const List = () => {
 				// 回到顶部
 				case "home":
 					return rowVirtualizer.scrollToIndex?.(0);
+				// 收藏和取消收藏
+				case "meta.d":
+				case "ctrl.d":
+					return state.$eventBus?.emit(LISTEN_KEY.CLIPBOARD_ITEM_FAVORITE);
 			}
 		},
 		{
@@ -82,9 +98,15 @@ const List = () => {
 		},
 	);
 
+	const scrollToTop = () => {
+		rowVirtualizer.scrollToIndex(0);
+
+		state.activeId = state.list[0]?.id;
+	};
+
 	return (
 		<>
-			<Scrollbar ref={outerRef} className="flex-1">
+			<Scrollbar ref={outerRef} offset={3} className="flex-1">
 				<div
 					data-tauri-drag-region
 					className="relative w-full"
@@ -110,8 +132,11 @@ const List = () => {
 				</div>
 			</Scrollbar>
 
-			{/* @ts-ignore */}
-			<FloatButton.BackTop duration={0} target={() => outerRef.current} />
+			<FloatButton.BackTop
+				duration={0}
+				target={() => outerRef.current!}
+				onClick={scrollToTop}
+			/>
 
 			<NoteModal ref={noteModelRef} />
 		</>

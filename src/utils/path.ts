@@ -52,6 +52,7 @@ export const getSaveImagePath = (file: string) => {
 export const getSaveDataDirName = () => {
 	return last(getSaveDataDir().split(sep())) as string;
 };
+
 /**
  * 存储配置项的路径
  * @param backup 是否是备份数据
@@ -64,4 +65,13 @@ export const getSaveStorePath = async (backup = false) => {
 	}
 
 	return joinPath(await appDataDir(), `.store.${extname}`);
+};
+
+/**
+ * 存储窗口位置的路径
+ */
+export const saveWindowStatePath = async () => {
+	const extname = isDev() ? "dev.json" : "json";
+
+	return joinPath(await appDataDir(), `.window-state.${extname}`);
 };

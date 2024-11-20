@@ -31,7 +31,7 @@
 			},
 			{
 				"label": "preference",
-				"url": "index.html/#/preference/clipboard",
+				"url": "index.html/#/preference",
 				"width": 700,
 				"height": 480,
 				"minWidth": 700,
@@ -73,7 +73,7 @@
 			"icons/icon.icns",
 			"icons/icon.ico"
 		],
-		"resources": ["assets/tray.ico", "assets/tray-mac.ico"]
+		"resources": ["assets/tray.ico", "assets/drag-icon.png"]
 	},
 	"plugins": {
 		"updater": {

@@ -1,12 +1,15 @@
-use tauri::{ActivationPolicy, App, Emitter, Manager, WebviewWindow};
+use tauri::{ActivationPolicy, App, Emitter, EventTarget, Manager, WebviewWindow};
 use tauri_nspanel::{cocoa::appkit::NSWindowCollectionBehavior, panel_delegate, WebviewWindowExt};
-use tauri_plugin_eco_window_state::save_window_state;
+use tauri_plugin_eco_window::MAIN_WINDOW_LABEL;
 
 #[allow(non_upper_case_globals)]
 const NSWindowStyleMaskNonActivatingPanel: i32 = 1 << 7;
 #[allow(non_upper_case_globals)]
 const NSResizableWindowMask: i32 = 1 << 3;
-const MACOS_PANEL_FOCUS: &str = "macos-panel-focus";
+const WINDOW_FOCUS_EVENT: &str = "tauri://focus";
+const WINDOW_BLUR_EVENT: &str = "tauri://blur";
+const WINDOW_MOVED_EVENT: &str = "tauri://move";
+const WINDOW_RESIZED_EVENT: &str = "tauri://resize";
 
 pub fn platform(app: &mut App, main_window: WebviewWindow, _preference_window: WebviewWindow) {
     let app_handle = app.app_handle().clone();
@@ -36,23 +39,40 @@ pub fn platform(app: &mut App, main_window: WebviewWindow, _preference_window: W
     // 定义面板的委托 (delegate)，用于监听面板窗口的事件
     let delegate = panel_delegate!(EcoPanelDelegate {
         window_did_become_key,
-        window_did_resign_key
+        window_did_resign_key,
+        window_did_resize,
+        window_did_move
     });
 
     // 为 delegate 设置事件监听器
     delegate.set_listener(Box::new(move |delegate_name: String| {
+        let target = EventTarget::labeled(MAIN_WINDOW_LABEL);
+
+        let window_move_event = || {
+            if let Ok(position) = main_window.outer_position() {
+                let _ = main_window.emit_to(target.clone(), WINDOW_MOVED_EVENT, position);
+            }
+        };
+
         match delegate_name.as_str() {
             // 当窗口获得键盘焦点时调用
             "window_did_become_key" => {
-                app_handle.emit(MACOS_PANEL_FOCUS, true).unwrap();
+                let _ = main_window.emit_to(target, WINDOW_FOCUS_EVENT, true);
             }
             // 当窗口失去键盘焦点时调用
             "window_did_resign_key" => {
-                app_handle.emit(MACOS_PANEL_FOCUS, false).unwrap();
-
-                let app_handle_clone = app_handle.clone();
-                save_window_state(app_handle_clone);
+                let _ = main_window.emit_to(target, WINDOW_BLUR_EVENT, true);
             }
+            // 当窗口大小改变时调用
+            "window_did_resize" => {
+                window_move_event();
+
+                if let Ok(size) = main_window.inner_size() {
+                    let _ = main_window.emit_to(target, WINDOW_RESIZED_EVENT, size);
+                }
+            }
+            // 当窗口位置改变时调用
+            "window_did_move" => window_move_event(),
             _ => (),
         }
     }));

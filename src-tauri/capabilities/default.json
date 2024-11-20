@@ -11,6 +11,7 @@
 		"core:window:allow-start-dragging",
 		"core:window:allow-set-theme",
 		"core:window:deny-internal-toggle-maximize",
+		"core:window:allow-set-size",
 		"shell:default",
 		{
 			"identifier": "shell:allow-execute",
@@ -46,9 +47,9 @@
 		"dialog:default",
 		"updater:default",
 		"process:default",
+		"drag:default",
 		"eco-window:default",
 		"eco-macos-permissions:default",
-		"eco-mouse:default",
 		"eco-fs-extra:default",
 		"eco-backup:default",
 		"eco-locale:default",
